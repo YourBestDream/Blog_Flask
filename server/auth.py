@@ -29,11 +29,18 @@ def signup():
 def login():
     email = request.json.get('email')
     password = request.json.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email and password required"}), 400
+
     user = User.query.filter_by(email = email).first()
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
     if user:
         if check_password_hash(user.password, password):
             login_user(user, remember=True)
             return jsonify({"message": "Login successful"}), 200
         else:
             return jsonify({"error": "Invalid credentials"}), 401 
-    return
