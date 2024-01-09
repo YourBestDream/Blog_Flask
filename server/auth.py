@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 auth = Blueprint('auth',__name__)
 
-@auth.route('/signup',methods = ['GET','POST'])
+@auth.route('/signup',methods = ['POST'])
 def signup():
     if request.method == 'POST':
         email = request.json.get('email')
@@ -26,7 +26,7 @@ def signup():
         
         return jsonify("Suck chess")
 
-@auth.route('/login', methods = ['GET','POST'])
+@auth.route('/login', methods = ['POST'])
 def login():
     if request.method == 'POST':
         email = request.json.get('email')
