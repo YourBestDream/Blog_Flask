@@ -3,12 +3,13 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from flask_login import LoginManager    
+from flask_login import LoginManager, UserMixin
 from flask_cors import CORS
 
 load_dotenv()
 
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
@@ -26,8 +27,8 @@ def create_app():
     app.register_blueprint(auth, url_prefix = '/')
     app.register_blueprint(requests, url_prefix = '/')
 
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+
+    # login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
     return app
