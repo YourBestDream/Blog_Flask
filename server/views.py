@@ -9,10 +9,6 @@ import json
 
 views = Blueprint('views',__name__)
 
-@views.route('/home',methods = ['GET','POST'])
-def homepage(): 
-    return jsonify({'text':'I am your father'})
-
 @views.route('/post', methods = ['GET','POST'])
 def post_creation():
     if request.method == 'GET':
@@ -32,7 +28,7 @@ def post_creation():
 
         category = db.session.execute(select(Category).filter_by(name = cat)).scalars().first()
         
-        new_post = Post(id = uuid4(), title = title, text = text, likes = 0, created_by = current_user.id,category_id = category.id)
+        new_post = Post(id = uuid4(), title = title, text = text, likes = 0, created_by = current_user.id, category_id = category.id)
 
         for tag_name in tags:
             tag = db.session.execute(select(Tag).filter_by(name=tag_name)).scalars().first()

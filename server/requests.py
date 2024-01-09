@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from .models import Category, Tag
+from .models import Category, Tag, Post
 from . import db
 from sqlalchemy import select
 import json
@@ -19,3 +19,10 @@ def categories_retrieve():
         cats = db.session.execute(select(Category)).scalars().all()
         cats_list = [{'id':cat.id, 'name':cat.name} for cat in cats]
         return jsonify(cats_list)
+
+@requests.route('/posts-retrieve', methods=['GET'])
+def posts_retrieve():
+    if request.method == 'GET':
+        posts = db.session.execute(select(Post)).scalars().all()
+        post_list = [{'id':post.id, 'title':post.title, 'content':post.text,'date':post.updated_at.strftime('%d %b %Y')} for post in posts]
+        return jsonify(post_list)
