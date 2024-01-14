@@ -10,6 +10,7 @@ import json
 views = Blueprint('views',__name__)
 
 @views.route('/post', methods = ['GET','POST'])
+@login_required
 def post_creation():
     if request.method == 'GET':
         return jsonify({'message':'suck chess'})

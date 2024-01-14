@@ -24,7 +24,7 @@ def signup():
             db.session.commit()
             login_user(new_user, remember = True)
         
-        return jsonify("Suck chess")
+        return jsonify({"message":"User created succesfully"}), 200
 
 @auth.route('/login', methods = ['POST'])
 def login():
@@ -43,6 +43,12 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
+                # print(current_user.is_authenticated)
                 return jsonify({"message": "Login successful"}), 200
             else:
                 return jsonify({"error": "Invalid credentials"}), 401 
+
+@auth.route('/logout', methods = ['GET'])
+def logout():
+    logout_user()
+    return {'message':'logged out'}, 200

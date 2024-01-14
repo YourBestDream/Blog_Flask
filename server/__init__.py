@@ -17,7 +17,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ.get("POSTGRES_USERNAME")}:{os.environ.get("POSTGRES_PASSWORD")}@{os.environ.get("POSTGRES_URL")}/{os.environ.get("POSTGRES_DATABASE")}'
     db.init_app(app)
 
-    CORS(app)
+    CORS(app, supports_credentials = True)
 
     from .views import views
     from .auth import auth
