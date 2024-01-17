@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 from . import db
 from sqlalchemy import select
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Bookmark, User, Like
 from uuid import uuid4
 
 import json
@@ -46,3 +46,18 @@ def post_creation():
     else:
 
         return jsonify({'message':'Invalid request method'}), 405
+
+@views.route("/bookmarked", methods = ["GET"])
+@login_required
+def bookmarked_retrieve():
+    bookmarks = db.session.execute(select(Bookmark).filter_by(user_id = current_user.id)).scalars().all()
+    posts = [Post.query.get(bookmark.post_id) for bookmark in bookmarks]
+    post_list = [{'id':post.id, 
+                'title':post.title, 
+                'category':db.session.execute(select(Category.name).where(Category.id == post.category_id)).scalar(),
+                'date':post.updated_at.strftime('%d %b %Y %H:%M'), 
+                'likes':post.likes,
+                'bookmarks':post.bookmarks,
+                'liked':Like.query.filter_by(user_id = current_user.id, post_id = post.id).first() is not None,
+                'bookmarked':True} for post in posts if post is not None]
+    return jsonify(post_list)
